@@ -14,11 +14,10 @@ class DB
 
                 db.execute(
                     '''
-                        CREATE TABLE t_bbs(
+                        CREATE TABLE t_bbs_groups(
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
-                            group_id INTEGER NOT NULL,
                             name TEXT NOT NULL,
-                            url TEXT NOT NULL,
+                            sort INTEGER NOT NULL,
                             created_at TEXT NOT NULL,
                             uodated_at TEXT NOT NULL
                         )
@@ -28,7 +27,7 @@ class DB
                     '''
                         CREATE TABLE t_boards(
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
-                            parent_id INTEGER NOT NULL,
+                            group_id INTEGER NOT NULL,
                             created_at TEXT NOT NULL,
                             uodated_at TEXT NOT NULL
                         )
@@ -38,7 +37,7 @@ class DB
                     '''
                         CREATE TABLE t_threads(
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
-                            parent_id INTEGER NOT NULL,
+                            board_id INTEGER NOT NULL,
                             title TEXT NOT NULL,
                             created_at TEXT NOT NULL,
                             uodated_at TEXT NOT NULL
