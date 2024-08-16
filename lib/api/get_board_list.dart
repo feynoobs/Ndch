@@ -1,13 +1,5 @@
 import 'api_common.dart';
-
-
-class BoardObject
-{
-    String group;
-    List<Map<String, String>> boards;
-
-    BoardObject(this.group, this.boards);
-}
+import '../dao/board_object.dart';
 
 class GetBoardList extends ApiCommon
 {
@@ -32,8 +24,7 @@ class GetBoardList extends ApiCommon
                 for (final m2 in matches2) {
                     group.add({m2[2]!: m2[1]!});
                 }
-                BoardObject obj = BoardObject(m1[1]!, group);
-                r.add(obj);
+                r.add(BoardObject(m1[1]!, group));
             }
         }
 
