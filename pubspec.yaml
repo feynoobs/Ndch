@@ -37,10 +37,11 @@ dependencies:
   cupertino_icons: ^1.0.6
 
   # apps
+  path:
   sqflite:
   http:
-
-
+  logger:
+  charset_converter: ^2.1.2
 
 dev_dependencies:
   flutter_test:

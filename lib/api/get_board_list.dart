@@ -1,17 +1,42 @@
-import 'package:http/http.dart';
-
 import 'api_common.dart';
+
+
+class BoardObject
+{
+    String group;
+    List<Map<String, String>> boards;
+
+    BoardObject(this.group, this.boards);
+}
 
 class GetBoardList extends ApiCommon
 {
     GetBoardList() : super('https://www2.5ch.net/5ch.html');
-    Future<String?> doRequest() async
+
+    Future<List<BoardObject>> doRequest() async
     {
+        List<BoardObject> r = [];
+
         final Map<String, String> headerParams = {
             'Accept-Encoding': 'gzip, compress',
-            'User-Agent:': 'Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0'
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0'
         };
-        String? r = await request(headerParams);
+        String? ret = await request(headerParams);
+        if (ret != null) {
+            final RegExp exp1 = RegExp(r'<br><br><B>(.+?)</B><br>\n((?:<A HREF=".+?">.+?</A>(?:<br>)?\n)+)');
+            final RegExp exp2 = RegExp(r'(?:<A HREF="(.+?)">(.+?)</A>(?:<br>)?)+');
+            final Iterable<RegExpMatch> matches1 = exp1.allMatches(ret);
+            for (final m1 in matches1) {
+                List<Map<String, String>> group = [];
+                final Iterable<RegExpMatch> matches2 = exp2.allMatches(m1[2]!);
+                for (final m2 in matches2) {
+                    group.add({m2[2]!: m2[1]!});
+                }
+                BoardObject obj = BoardObject(m1[1]!, group);
+                r.add(obj);
+            }
+        }
 
+        return r;
     }
 }
