@@ -1,7 +1,7 @@
 class BoardObject
 {
     String group;
-    List<Map<String, String>> boards;
+    Map<String, String> boards;
 
     BoardObject(this.group, this.boards);
 }

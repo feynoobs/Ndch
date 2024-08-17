@@ -52,3 +52,8 @@ class DB
         return _instance!;
     }
 }
+
+String now()
+{
+    return DateTime.now().toIso8601String();
+}

@@ -1,6 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import '../api/get_board_list.dart';
 import '../dao/board_object.dart';
+import 'database.dart';
 
 class GetBBS
 {
@@ -46,10 +47,26 @@ class GetBBS
         // データベースにBBSの情報がない場合
         else {
             ret = await GetBoardList().doRequest();
-            for (final BoardObject object in ret) {
+            _instance.transaction((final Transaction txn) async {
+                int bbsSort = 0;
+                for (final BoardObject object in ret) {
+                    Map<String, Object?> bbsData = {};
+                    ++bbsSort;
+                    bbsData['name'] = object.group;
+                    bbsData['sort'] = bbsSort;
+                    bbsData['created_at'] = now();
+                    bbsData['uodated_at'] = now();
+                    int id = await txn.insert('t_bbs', bbsData);
+                    int boardSort = 0;
+                    for (final Map<String, String> board in object.boards) {
+                        Map<String, Object?> boardData = {};
+                        ++boardSort;
+                        boardData['bbs_id'] = id;
+                        boardData['url'] = board;
 
-            }
+                    }
+                }
+            });
         }
     }
-
 }
