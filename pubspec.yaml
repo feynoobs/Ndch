@@ -41,7 +41,7 @@ dependencies:
   sqflite:
   http:
   logger:
-  charset_converter: ^2.1.2
+  charset_converter:
 
 dev_dependencies:
   flutter_test:
