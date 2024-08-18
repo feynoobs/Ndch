@@ -37,11 +37,11 @@ class GetBBS
 
                 BoardObject? object = boardObjectSearch(record['bbs_name'] as String, ret);
                 if (object == null) {
-                    BoardObject object = BoardObject(record['bbs_name'] as String, []);
+                    BoardObject object = BoardObject(record['bbs_name'] as String, {});
                     object.group = bbs;
                     ret.add(object);
                 }
-                object!.boards.add({board: url});
+                object!.boards[board] = url;
             }
         }
         // データベースにBBSの情報がない場合
@@ -58,15 +58,21 @@ class GetBBS
                     bbsData['uodated_at'] = now();
                     int id = await txn.insert('t_bbs', bbsData);
                     int boardSort = 0;
-                    for (final Map<String, String> board in object.boards) {
-                        Map<String, Object?> boardData = {};
+                    Map<String, Object?> boardData = {};
+                    object.boards.forEach((final String key, final String value) {
                         ++boardSort;
                         boardData['bbs_id'] = id;
-                        boardData['url'] = board;
-
-                    }
+                        boardData['name'] = key;
+                        boardData['url'] = value;
+                        boardData['sort'] = boardSort;
+                        bbsData['created_at'] = now();
+                        bbsData['uodated_at'] = now();
+                    });
+                    txn.insert('t_boards', boardData);
                 }
             });
         }
+
+        return ret;
     }
 }

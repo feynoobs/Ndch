@@ -19,10 +19,10 @@ class GetBoardList extends ApiCommon
             final RegExp exp2 = RegExp(r'(?:<A HREF="(.+?)">(.+?)</A>(?:<br>)?)+');
             final Iterable<RegExpMatch> matches1 = exp1.allMatches(ret);
             for (final m1 in matches1) {
-                List<Map<String, String>> group = [];
+                Map<String, String> group = {};
                 final Iterable<RegExpMatch> matches2 = exp2.allMatches(m1[2]!);
                 for (final m2 in matches2) {
-                    group.add({m2[2]!: m2[1]!});
+                    group[m2[2]!] = m2[1]!;
                 }
                 r.add(BoardObject(m1[1]!, group));
             }

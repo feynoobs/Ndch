@@ -12,6 +12,7 @@ BoardObject? boardObjectSearch(final String group, final List<BoardObject> objec
     for (final BoardObject object in objects) {
         if (object.group == group) {
             ret = object;
+            break;
         }
     }
 

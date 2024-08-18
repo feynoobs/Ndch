@@ -28,6 +28,7 @@ class DB
                         CREATE TABLE t_boards(
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
                             bbs_id INTEGER NOT NULL,
+                            name TEXT NOT NULL,
                             url TEXT NOT NULL,
                             sort INTEGER NOT NULL,
                             created_at TEXT NOT NULL,
