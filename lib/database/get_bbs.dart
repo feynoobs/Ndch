@@ -16,7 +16,7 @@ class GetBBS
                 SELECT
                     t_bbs.name AS bbs_name,
                     t_boards.name AS board_name,
-                    t_boards.url AS board_url,
+                    t_boards.url AS board_url
                 FROM
                     t_bbs
                 INNER JOIN
