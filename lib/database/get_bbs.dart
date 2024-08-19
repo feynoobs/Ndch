@@ -30,24 +30,25 @@ class GetBBS
         List<BoardObject> ret = [];
         // データベースにBBSの情報がある場合
         if (datas.isNotEmpty) {
+
             for (final Map<String, Object?> record in datas) {
-                final String bbs = record['bbs_name'] as String;
+                BoardObject bo;
+                final String group = record['bbs_name'] as String;
                 final String board = record['board_name'] as String;
                 final String url = record['board_url'] as String;
 
-                BoardObject? object = boardObjectSearch(record['bbs_name'] as String, ret);
-                if (object == null) {
-                    BoardObject object = BoardObject(record['bbs_name'] as String, {});
-                    object.group = bbs;
-                    ret.add(object);
-                }
-                object!.boards[board] = url;
+                BoardObject? object = boardObjectSearch(group, ret);
+                object ??= BoardObject(group, {});
+
+                object.group = group;
+                object.boards[board] = url;
+                ret.add(object);
             }
         }
         // データベースにBBSの情報がない場合
         else {
             ret = await GetBoardList().doRequest();
-            _instance.transaction((final Transaction txn) async {
+            await _instance.transaction((final Transaction txn) async {
                 int bbsSort = 0;
                 for (final BoardObject object in ret) {
                     Map<String, Object?> bbsData = {};
@@ -58,17 +59,17 @@ class GetBBS
                     bbsData['uodated_at'] = now();
                     int id = await txn.insert('t_bbs', bbsData);
                     int boardSort = 0;
-                    Map<String, Object?> boardData = {};
-                    object.boards.forEach((final String key, final String value) {
+                    object.boards.forEach((final String key, final String value) async {
+                        Map<String, Object?> boardData = {};
                         ++boardSort;
                         boardData['bbs_id'] = id;
                         boardData['name'] = key;
                         boardData['url'] = value;
                         boardData['sort'] = boardSort;
-                        bbsData['created_at'] = now();
-                        bbsData['uodated_at'] = now();
+                        boardData['created_at'] = now();
+                        boardData['uodated_at'] = now();
+                        await txn.insert('t_boards', boardData);
                     });
-                    txn.insert('t_boards', boardData);
                 }
             });
         }

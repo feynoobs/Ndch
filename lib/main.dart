@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'api/get_board_list.dart';
+import 'database/get_bbs.dart';
+import 'database/database.dart';
 
 void main() {
     runApp(const Ndch());
@@ -57,11 +59,12 @@ class NdchHome extends StatefulWidget {
 }
 
 class _NdchHomeState extends State<NdchHome> {
-      int _counter = 0;
+    int _counter = 0;
 
-    void _incrementCounter() {
+    void _incrementCounter() async {
+        final ins = await DB.getInstance();
         setState(() {
-GetBoardList().doRequest();
+            GetBBS(ins).get();
             // This call to setState tells the Flutter framework that something has
             // changed in this State, which causes it to rerun the build method below
             // so that the display can reflect the updated values. If we changed
