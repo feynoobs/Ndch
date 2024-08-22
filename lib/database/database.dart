@@ -14,7 +14,7 @@ class DB
 
                 db.execute(
                     '''
-                        CREATE TABLE t_bbs(
+                        CREATE TABLE t_bbses(
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
                             name TEXT NOT NULL,
                             sort INTEGER NOT NULL,
