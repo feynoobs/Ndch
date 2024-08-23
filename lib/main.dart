@@ -1,19 +1,74 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'api/get_board_list.dart';
+import 'layout/bbs.dart';
 import 'database/get_bbs.dart';
 import 'database/database.dart';
 
-void main() {
-    runApp(const Ndch());
-}
+void main() async
+{
+    WidgetsFlutterBinding.ensureInitialized();
 
-class Ndch extends StatelessWidget {
+    String init = 'bbs';
+    final pref = await SharedPreferences.getInstance();
+    final int? status = pref.getInt('status');
+    switch (status) {
+        case null:
+        case 1:
+            init = 'bbs';
+            break;
+        default:
+            break;
+    }
+
+    runApp(
+        MaterialApp(
+            initialRoute: init,
+            routes: <String, WidgetBuilder> {
+                'bbs': (BuildContext context) => const BBS(),
+            },
+            theme: ThemeData(
+                primarySwatch: Colors.blue
+            ),
+        )
+    );
+}
+/*
+Future<void> initMain() async
+{
+
+    String init = 'bbses';
+    final pref = await SharedPreferences.getInstance();
+    final int? status = pref.getInt('status');
+    switch (status) {
+        case null:
+        case 1:
+            init = 'bbses';
+            break;
+        default:
+            break;
+    }
+
+    runApp(
+        MaterialApp(
+            initialRoute: init,
+            routes: <String, WidgetBuilder> {
+                'bbses' =>
+            },
+        )
+    );
+}
+*/
+
+class Ndch extends StatelessWidget
+{
     const Ndch({super.key});
 
     // This widget is the root of your application.
     @override
-    Widget build(BuildContext context) {
+    Widget build(BuildContext context)
+    {
         return MaterialApp(
             title: 'Flutter Demo',
             theme: ThemeData(
@@ -40,7 +95,8 @@ class Ndch extends StatelessWidget {
     }
 }
 
-class NdchHome extends StatefulWidget {
+class NdchHome extends StatefulWidget
+{
     const NdchHome({super.key, required this.title});
 
     // This widget is the home page of your application. It is stateful, meaning
@@ -58,7 +114,8 @@ class NdchHome extends StatefulWidget {
     State<NdchHome> createState() => _NdchHomeState();
 }
 
-class _NdchHomeState extends State<NdchHome> {
+class _NdchHomeState extends State<NdchHome>
+{
     int _counter = 0;
 
     void _incrementCounter() async {

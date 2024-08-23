@@ -42,6 +42,7 @@ dependencies:
   http:
   logger:
   charset_converter:
+  shared_preferences:
 
 dev_dependencies:
   flutter_test:

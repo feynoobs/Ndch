@@ -14,7 +14,7 @@ class BBS extends StatefulWidget
 class _BBSState extends State<BBS>
 {
     List<BoardObject>? bbses;
-
+/*
     Future<void> _initialize() async
     {
         final ins = await DB.getInstance();
@@ -27,7 +27,7 @@ class _BBSState extends State<BBS>
         super.initState();
         _initialize();
     }
-
+*/
 
     @override
     Widget build(BuildContext context)
