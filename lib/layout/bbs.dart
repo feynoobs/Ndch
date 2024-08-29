@@ -14,29 +14,42 @@ class BBS extends StatefulWidget
 
 class _BBSState extends State<BBS>
 {
-    List<BoardObject>? bbses;
-    List<Widget> aaa = [];
+    final List<Widget> _columns = [];
 
     Future<void> _initialize() async
     {
-        bbses = await GetBBS(await DB.getInstance()).get();
+        List<BoardObject> bbses = await GetBBS(await DB.getInstance()).get();
         setState(() {
-            int axa = 0;
-            for (final BoardObject bbs in bbses!) {
-                ++axa;
-                aaa!.add(Container
-                (
-                    key: ValueKey(axa),
-                    decoration: const BoxDecoration(
-                        border: Border(
-                            bottom: BorderSide(
-                                color: Colors.grey,
-                                width: 0.2
-                            ),
-                        ),
-                    ),
-                    child: Text(bbs.group)
-                ));
+            for (final BoardObject bbs in bbses) {
+                List<Align> item = <Align>[];
+                for (final key in bbs.boards.keys) {
+                    item.add(
+                        Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                                key,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    shadows: <Shadow>[
+                                        Shadow(
+                                            color: Colors.grey,
+                                            offset: Offset(5.0, 5.0),
+                                            blurRadius: 3.0,
+                                        )
+                                    ]
+                                )
+                            )
+                        )
+                    );
+                }
+                _columns.add(
+                    ExpansionTile(
+                        title: Text(bbs.group),
+                        key: ValueKey(bbs.group),
+                        children: item
+                    )
+                );
             }
         });
     }
@@ -56,15 +69,17 @@ class _BBSState extends State<BBS>
         return Scaffold(
             appBar: const EmptyAppBar(),
             body: NotificationListener<ScrollNotification> (
-                child: Scrollbar(child: ListView.builder(
-                    controller: scrollController,
-                    shrinkWrap: true,
-                    itemCount: bbses!.length,
-                    itemBuilder: (final BuildContext _, final int index) {
-                        return aaa![index];
-                    },
-                ),
-            )
-        ));
+                child: Scrollbar(
+                    child: ListView.builder(
+                        controller: scrollController,
+                        shrinkWrap: true,
+                        itemCount: _columns.length,
+                        itemBuilder: (final BuildContext _, final int index) {
+                            return _columns[index];
+                        },
+                    )
+                )
+            ),
+        );
     }
 }
