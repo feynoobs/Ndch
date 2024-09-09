@@ -11,13 +11,15 @@ class GetBoard
 
     Future<List<ThreadObject>> get() async
     {
-        final List<Map<String, Object?>> bbses = await _instance.rawQuery(
+        final List<Map<String, Object?>> boards = await _instance.rawQuery(
             '''
                 SELECT
                     id,
                     name AS bbs_name
                 FROM
-                    t_bbses
+                    t_boards
+                WHERE
+
                 ORDER BY
                     sort
             '''

@@ -1,13 +1,13 @@
 import 'api_common.dart';
-import '../dao/board_object.dart';
+import '../dao/thread_object.dart';
 
 class GetThreadList extends ApiCommon
 {
     GetThreadList(super.url);
 
-    Future<List<BoardObject>> doRequest() async
+    Future<List<ThreadObject>> doRequest() async
     {
-        List<BoardObject> r = [];
+        List<ThreadObject> r = [];
 
         final Map<String, String> headerParams = {
             'Accept-Encoding': 'gzip, compress',
@@ -15,22 +15,11 @@ class GetThreadList extends ApiCommon
         };
         String? ret = await request(headerParams);
         if (ret != null) {
-            final RegExp exp = RegExp(r'(\d+)?\.dat<>(.+?)\(\d+\)');
+            final RegExp exp = RegExp(r'(\d+)?\.dat<>(.+?)\(\d+\)\n');
             final Iterable<RegExpMatch> matches = exp.allMatches(ret);
             for (final RegExpMatch m in matches) {
 
-            }
-
-
-
-            final RegExp exp2 = RegExp(r'(?:<A HREF="(.+?)">(.+?)</A>(?:<br>)?)+');
-            for (final m1 in matches1) {
-                Map<String, String> group = {};
-                final Iterable<RegExpMatch> matches2 = exp2.allMatches(m1[2]!);
-                for (final m2 in matches2) {
-                    group[m2[2]!] = m2[1]!;
-                }
-                r.add(BoardObject(m1[1]!, group));
+                r.add(ThreadObject(m[1] as int, m[3] as int, m[2]!));
             }
         }
 

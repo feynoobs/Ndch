@@ -1,6 +1,8 @@
 class ThreadObject
 {
-    Map<int, Map<String, String>> threads;
+    final int dat;
+    final int time;
+    final String name;
 
-    ThreadObject(this.threads);
+    ThreadObject(this.dat, this.time, this.name);
 }

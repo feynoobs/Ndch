@@ -23,6 +23,7 @@ class DB
                         )
                     '''
                 );
+
                 db.execute(
                     '''
                         CREATE TABLE t_boards(
@@ -31,11 +32,18 @@ class DB
                             name TEXT NOT NULL,
                             url TEXT NOT NULL,
                             sort INTEGER NOT NULL,
+                            power REAL NOT NULL,
                             created_at TEXT NOT NULL,
                             uodated_at TEXT NOT NULL
                         )
                     '''
                 );
+                db.execute(
+                    '''
+                        CREATE UNIQUE INDEX index_boards_bbs_id_url ON t_boards(bbs_id, url)
+                    '''
+                );
+
                 db.execute(
                     '''
                         CREATE TABLE t_threads(
