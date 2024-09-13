@@ -49,10 +49,17 @@ class DB
                         CREATE TABLE t_threads(
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
                             board_id INTEGER NOT NULL,
-                            title TEXT NOT NULL,
+                            name TEXT NOT NULL,
+                            dat INTEGER NOT NULL,
+                            res INTEGER NOT NULL,
                             created_at TEXT NOT NULL,
                             uodated_at TEXT NOT NULL
                         )
+                    '''
+                );
+                db.execute(
+                    '''
+                        CREATE UNIQUE INDEX index_threads_board_id_dat ON t_threads(bbs_id, url)
                     '''
                 );
             })

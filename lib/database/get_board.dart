@@ -1,15 +1,22 @@
 import 'package:sqflite/sqflite.dart';
-import '../api/get_board_list.dart';
+import '../api/get_thread_list.dart';
 import '../dao/thread_object.dart';
 import 'database.dart';
 
 class GetBoard
 {
     final Database _instance;
+    final String url;
 
-    GetBoard(this._instance);
+    GetBoard(this._instance, this.url);
 
-    Future<List<ThreadObject>> get() async
+    double _powerCalc(int dat, int res)
+    {
+        final double now = DateTime.now().toUtc().millisecondsSinceEpoch / 1000;
+        return res / (now - dat);
+    }
+
+    Future<List<ThreadObject>> get(final int id) async
     {
         final List<Map<String, Object?>> boards = await _instance.rawQuery(
             '''
@@ -19,62 +26,69 @@ class GetBoard
                 FROM
                     t_boards
                 WHERE
-
+                    id = ?
                 ORDER BY
                     sort
             '''
+            , [id]
         );
+
+
         List<ThreadObject> ret = [];
         // データベースにBBSの情報がある場合
         if (boards.isNotEmpty) {
             for (final Map<String, Object?> board in boards) {
-                final List<Map<String, Object?>> boards = await _instance.rawQuery(
+                final List<Map<String, Object?>> threads = await _instance.rawQuery(
                     '''
                         SELECT
-                            name AS board_name,
-                            url AS board_url
+                            name AS thread_name,
+                            res,
+                            dat
                         FROM
-                            t_boards
+                            t_threads
                         WHERE
                             bbs_id = ?
                         ORDER BY
                             sort
                     '''
-                ,  [bbs['id']]);
-                Map<String, String> group = {};
-                for (final Map<String, Object?> board in boards) {
-                    final String b = board['board_name'] as String;
-                    final String u = board['board_url'] as String;
-                     group[b] = u;
+                ,  [board['id']]);
+                if (threads.isNotEmpty) {
+                    for (final Map<String, Object?> thread in threads) {
+                        ret.add(ThreadObject(thread['dat'] as int, thread['res'] as int, thread['thread_name'] as String));
+                    }
                 }
-                ret.add(ThreadObject(bbs['bbs_name'] as String, group));
+                else {
+                    ret = await GetThreadList(url).doRequest();
+                    await _instance.transaction((final Transaction txn) async {
+                        for (final ThreadObject object in ret) {
+                            Map<String, Object?> threadData = {};
+                            threadData['name'] = object.name;
+                            threadData['board_id'] = id;
+                            threadData['dat'] = object.dat;
+                            threadData['res'] = object.res;
+                            threadData['created_at'] = now();
+                            threadData['uodated_at'] = now();
+
+                            await txn.insert('t_threads', threadData);
+                        }
+                    });
+                }
             }
         }
         // データベースにBBSの情報がない場合
         else {
-            ret = await GetBoardList().doRequest();
+            ret = await GetThreadList(url).doRequest();
             await _instance.transaction((final Transaction txn) async {
-                int bbsSort = 0;
                 for (final ThreadObject object in ret) {
-                    Map<String, Object?> bbsData = {};
-                    ++bbsSort;
-                    bbsData['name'] = object.group;
-                    bbsData['sort'] = bbsSort;
-                    bbsData['created_at'] = now();
-                    bbsData['uodated_at'] = now();
-                    int id = await txn.insert('t_bbses', bbsData);
-                    int boardSort = 0;
-                    object.boards.forEach((final String key, final String value) async {
-                        final Map<String, Object?> boardData = {};
-                        ++boardSort;
-                        boardData['bbs_id'] = id;
-                        boardData['name'] = key;
-                        boardData['url'] = value;
-                        boardData['sort'] = boardSort;
-                        boardData['created_at'] = now();
-                        boardData['uodated_at'] = now();
-                        await txn.insert('t_boards', boardData);
-                    });
+                    Map<String, Object?> threadData = {};
+                    threadData['name'] = object.name;
+                    threadData['board_id'] = id;
+                    threadData['dat'] = object.dat;
+                    threadData['res'] = object.res;
+                    threadData['created_at'] = now();
+                    threadData['uodated_at'] = now();
+
+                    await txn.insert('t_threads', threadData);
                 }
             });
         }

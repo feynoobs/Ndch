@@ -1,13 +1,14 @@
 import 'api_common.dart';
 import '../dao/board_object.dart';
+import '../dao/bbs_object.dart';
 
 class GetBoardList extends ApiCommon
 {
     GetBoardList() : super('https://www2.5ch.net/5ch.html');
 
-    Future<List<BoardObject>> doRequest() async
+    Future<List<BBSObject>> doRequest() async
     {
-        List<BoardObject> r = [];
+        List<BBSObject> r = [];
 
         final Map<String, String> headerParams = {
             'Accept-Encoding': 'gzip, compress',
@@ -19,12 +20,13 @@ class GetBoardList extends ApiCommon
             final RegExp exp2 = RegExp(r'(?:<A HREF="(.+?)">(.+?)</A>(?:<br>)?)+');
             final Iterable<RegExpMatch> matches1 = exp1.allMatches(ret);
             for (final m1 in matches1) {
-                Map<String, String> group = {};
+                List<BoardObject> group = [];
                 final Iterable<RegExpMatch> matches2 = exp2.allMatches(m1[2]!);
                 for (final m2 in matches2) {
-                    group[m2[2]!] = m2[1]!;
+                    group.add(BoardObject(m2[1]!, m2[2]!));
+
                 }
-                r.add(BoardObject(m1[1]!, group));
+                r.add(BBSObject(m1[1]!, group));
             }
         }
 

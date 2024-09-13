@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../dao/board_object.dart';
+import '../dao/bbs_object.dart';
 import '../database/database.dart';
 import '../database/get_bbs.dart';
 import 'common.dart';
