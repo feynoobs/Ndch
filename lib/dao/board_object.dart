@@ -1,7 +1,7 @@
 class BoardObject
 {
-    String group;
-    Map<String, String> boards;
+    String url;
+    String name;
 
-    BoardObject(this.group, this.boards);
+    BoardObject(this.url, this.name);
 }

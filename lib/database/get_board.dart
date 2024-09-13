@@ -26,8 +26,8 @@ class GetBoard
         );
         List<ThreadObject> ret = [];
         // データベースにBBSの情報がある場合
-        if (bbses.isNotEmpty) {
-            for (final Map<String, Object?> bbs in bbses) {
+        if (boards.isNotEmpty) {
+            for (final Map<String, Object?> board in boards) {
                 final List<Map<String, Object?>> boards = await _instance.rawQuery(
                     '''
                         SELECT

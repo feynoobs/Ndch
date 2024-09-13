@@ -1,5 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import '../api/get_board_list.dart';
+import '../dao/bbs_object.dart';
 import '../dao/board_object.dart';
 import 'database.dart';
 
@@ -9,7 +10,7 @@ class GetBBS
 
     GetBBS(this._instance);
 
-    Future<List<BoardObject>> get() async
+    Future<List<BBSObject>> get() async
     {
         final List<Map<String, Object?>> bbses = await _instance.rawQuery(
             '''
@@ -22,10 +23,33 @@ class GetBBS
                     sort
             '''
         );
-        List<BoardObject> ret = [];
+        List<BBSObject> ret = [];
         // データベースにBBSの情報がある場合
         if (bbses.isNotEmpty) {
             for (final Map<String, Object?> bbs in bbses) {
+                BBSObject bbsObject = BBSObject(bbs['bbs_name'] as String, []);
+
+                final List<Map<String, Object?>> boards = await _instance.rawQuery(
+                    '''
+                        SELECT
+                            name AS board_name,
+                            url AS board_url
+                        FROM
+                            t_boards
+                        WHERE
+                            bbs_id = ?
+                        ORDER BY
+                            sort
+                    '''
+                , [bbs['id']]);
+
+                List<BoardObject> boardObjects = [];
+                for (final Map<String, Object?> board in boards) {
+                    boardObjects.add(BoardObject(board['board_url'] as String, board['board_name'] as String));
+                }
+            }
+            for (final Map<String, Object?> bbs in bbses) {
+                final group = bbs.group;
                 final List<Map<String, Object?>> boards = await _instance.rawQuery(
                     '''
                         SELECT
@@ -45,7 +69,7 @@ class GetBBS
                     final String u = board['board_url'] as String;
                      group[b] = u;
                 }
-                ret.add(BoardObject(bbs['bbs_name'] as String, group));
+                ret.add(BBSObject(bbs['bbs_name'] as String, group));
             }
         }
         // データベースにBBSの情報がない場合
