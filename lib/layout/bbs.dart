@@ -18,11 +18,11 @@ class _BBSState extends State<BBS>
 
     Future<void> _initialize() async
     {
-        List<BoardObject> bbses = await GetBBS(await DB.getInstance()).get();
+        List<BBSObject> bbses = await GetBBS(await DB.getInstance()).get();
         setState(() {
-            for (final BoardObject bbs in bbses) {
+            for (final BBSObject bbs in bbses) {
                 List<GestureDetector> item = <GestureDetector>[];
-                for (final key in bbs.boards.keys) {
+                for (final board in bbs.boards) {
                     item.add(
                         GestureDetector(
                             onTap: () {
@@ -32,7 +32,7 @@ class _BBSState extends State<BBS>
                                 child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                        key,
+                                        board.name,
                                         textAlign: TextAlign.left,
                                         style: const TextStyle(
                                             fontSize: 18,
