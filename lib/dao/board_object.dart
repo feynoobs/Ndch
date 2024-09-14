@@ -1,7 +1,8 @@
 class BoardObject
 {
+    int id;
     String url;
     String name;
 
-    BoardObject(this.url, this.name);
+    BoardObject(this.id, this.url, this.name);
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../dao/bbs_object.dart';
 import '../database/database.dart';
 import '../database/get_bbs.dart';
+import 'board.dart';
 import 'common.dart';
 
 class BBS extends StatefulWidget
@@ -26,9 +27,10 @@ class _BBSState extends State<BBS>
                     item.add(
                         GestureDetector(
                             onTap: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => Board(id: board.id)));
                             },
                             child: Container(
-                                margin: const EdgeInsets.only(left: 20, bottom: 4),
+                                margin: const EdgeInsets.only(left: 20, bottom: 8),
                                 child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
@@ -45,8 +47,8 @@ class _BBSState extends State<BBS>
                 }
                 _columns.add(
                     ExpansionTile(
-                        title: Text(bbs.group),
-                        key: ValueKey(bbs.group),
+                        title: Text(bbs.bbs),
+                        key: ValueKey(bbs.bbs),
                         children: item
                     )
                 );

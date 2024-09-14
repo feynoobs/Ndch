@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'api/get_board_list.dart';
 import 'layout/bbs.dart';
 import 'database/get_bbs.dart';
 import 'database/database.dart';

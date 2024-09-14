@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-import '../dao/bbs_object.dart';
-import '../database/database.dart';
-import '../database/get_bbs.dart';
 import 'common.dart';
 
-class BBS extends StatefulWidget
+class Board extends StatefulWidget
 {
-    const BBS({super.key});
+    final int id;
+    const Board({required this.id, super.key});
 
     @override
-    State<BBS> createState() => _BBSState();
+    State<Board> createState() => _BoardState();
 }
 
-class _BBSState extends State<BBS>
+class _BoardState extends State<Board>
 {
     final List<Widget> _columns = [];
 

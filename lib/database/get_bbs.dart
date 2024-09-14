@@ -27,10 +27,10 @@ class GetBBS
         // データベースにBBSの情報がある場合
         if (bbses.isNotEmpty) {
             for (final Map<String, Object?> bbs in bbses) {
-
                 final List<Map<String, Object?>> boards = await _instance.rawQuery(
                     '''
                         SELECT
+                            id AS board_id,
                             name AS board_name,
                             url AS board_url
                         FROM
@@ -42,10 +42,11 @@ class GetBBS
                     '''
                 , [bbs['id']]);
 
-                List<BoardObject> boardObjects = [];
+                final List<BoardObject> boardObjects = [];
                 for (final Map<String, Object?> board in boards) {
-                    boardObjects.add(BoardObject(board['board_url'] as String, board['board_name'] as String));
+                    boardObjects.add(BoardObject(board['board_id'] as int, board['board_url'] as String, board['board_name'] as String));
                 }
+                ret.add(BBSObject(bbs['bbs_name'] as String, boardObjects));
             }
         }
         // データベースにBBSの情報がない場合
@@ -56,7 +57,7 @@ class GetBBS
                 for (final BBSObject object in ret) {
                     Map<String, Object?> bbsData = {};
                     ++bbsSort;
-                    bbsData['name'] = object.group;
+                    bbsData['name'] = object.bbs;
                     bbsData['sort'] = bbsSort;
                     bbsData['created_at'] = now();
                     bbsData['uodated_at'] = now();
