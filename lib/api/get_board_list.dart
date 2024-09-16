@@ -26,7 +26,7 @@ class GetBoardList extends ApiCommon
                     group.add(BoardObject(0, m2[1]!, m2[2]!));
 
                 }
-                r.add(BBSObject(m1[1]!, group));
+                r.add(BBSObject(0, m1[1]!, group));
             }
         }
 

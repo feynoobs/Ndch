@@ -47,8 +47,13 @@ class _BBSState extends State<BBS>
                 }
                 _columns.add(
                     ExpansionTile(
-                        title: Text(bbs.bbs),
-                        key: ValueKey(bbs.bbs),
+                        title: Text(
+                            bbs.bbs,
+                            style: const TextStyle(
+                                fontSize: 20,
+                            )
+                        ),
+                        key: ValueKey(bbs.id),
                         children: item
                     )
                 );
