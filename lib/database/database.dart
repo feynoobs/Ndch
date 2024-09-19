@@ -32,7 +32,6 @@ class DB
                             name TEXT NOT NULL,
                             url TEXT NOT NULL,
                             sort INTEGER NOT NULL,
-                            power REAL NOT NULL,
                             created_at TEXT NOT NULL,
                             uodated_at TEXT NOT NULL
                         )

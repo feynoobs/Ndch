@@ -16,7 +16,7 @@ class GetBoard
         return res / (now - dat);
     }
 
-    Future<List<ThreadObject>> get(final int id) async
+    Future<List<ThreadObject>> get() async
     {
         final List<Map<String, Object?>> boards = await _instance.rawQuery(
             '''
@@ -26,11 +26,11 @@ class GetBoard
                 FROM
                     t_boards
                 WHERE
-                    id = ?
+                    url = ?
                 ORDER BY
                     sort
             '''
-            , [id]
+            , [url]
         );
 
 
@@ -63,7 +63,7 @@ class GetBoard
                         for (final ThreadObject object in ret) {
                             Map<String, Object?> threadData = {};
                             threadData['name'] = object.name;
-                            threadData['board_id'] = id;
+                            threadData['board_id'] = boards[0]['id'];
                             threadData['dat'] = object.dat;
                             threadData['res'] = object.res;
                             threadData['created_at'] = now();
@@ -82,7 +82,7 @@ class GetBoard
                 for (final ThreadObject object in ret) {
                     Map<String, Object?> threadData = {};
                     threadData['name'] = object.name;
-                    threadData['board_id'] = id;
+                    threadData['board_id'] = boards[0]['id'];
                     threadData['dat'] = object.dat;
                     threadData['res'] = object.res;
                     threadData['created_at'] = now();

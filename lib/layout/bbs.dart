@@ -19,7 +19,7 @@ class _BBSState extends State<BBS>
 
     Future<void> _initialize() async
     {
-        List<BBSObject> bbses = await GetBBS(await DB.getInstance()).get();
+        final List<BBSObject> bbses = await GetBBS(await DB.getInstance()).get();
         setState(() {
             for (final BBSObject bbs in bbses) {
                 List<GestureDetector> item = <GestureDetector>[];
@@ -27,7 +27,7 @@ class _BBSState extends State<BBS>
                     item.add(
                         GestureDetector(
                             onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => Board(id: board.id)));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => Board(url: board.url)));
                             },
                             child: Container(
                                 margin: const EdgeInsets.only(left: 20, bottom: 8),
