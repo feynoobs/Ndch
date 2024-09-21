@@ -6,5 +6,5 @@ class BBSObject
     String bbs;
     List<BoardObject> boards;
 
-    BBSObject(this.id, this.bbs, {this.boards = const []});
+    BBSObject(this.bbs, this.boards, {this.id = 0});
 }

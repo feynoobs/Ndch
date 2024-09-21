@@ -7,5 +7,5 @@ class BoardObject
     String name;
     List<ThreadObject> threads;
 
-    BoardObject(this.id, this.url, this.name, {this.threads = const []});
+    BoardObject(this.url, this.name, {this.id = 0, this.threads = const []});
 }

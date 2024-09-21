@@ -23,10 +23,10 @@ class GetBoardList extends ApiCommon
                 List<BoardObject> group = [];
                 final Iterable<RegExpMatch> matches2 = exp2.allMatches(m1[2]!);
                 for (final m2 in matches2) {
-                    group.add(BoardObject(0, m2[1]!, m2[2]!));
+                    group.add(BoardObject(m2[1]!, m2[2]!));
 
                 }
-                r.add(BBSObject(0, m1[1]!, group));
+                r.add(BBSObject(m1[1]!, group));
             }
         }
 

@@ -1,3 +1,4 @@
+import 'package:google_maps_in_flutter/dao/board_object.dart';
 import 'package:sqflite/sqflite.dart';
 import '../api/get_thread_list.dart';
 import '../dao/thread_object.dart';
@@ -22,7 +23,7 @@ class GetBoard
             '''
                 SELECT
                     id,
-                    name AS bbs_name
+                    name AS board_name
                 FROM
                     t_boards
                 WHERE
@@ -34,7 +35,7 @@ class GetBoard
         );
 
 
-        List<ThreadObject> ret = [];
+        BoardObject ret = BoardObject(id: boards[0]['id'] as int, url, boards[0]['board_name'] as String);
         // データベースにBBSの情報がある場合
         if (boards.isNotEmpty) {
             for (final Map<String, Object?> board in boards) {
@@ -54,13 +55,13 @@ class GetBoard
                 ,  [board['id']]);
                 if (threads.isNotEmpty) {
                     for (final Map<String, Object?> thread in threads) {
-                        ret.add(ThreadObject(thread['dat'] as int, thread['res'] as int, thread['thread_name'] as String));
+                        ret.threads.add(ThreadObject(thread['dat'] as int, thread['res'] as int, thread['thread_name'] as String));
                     }
                 }
                 else {
                     ret = await GetThreadList(url).doRequest();
                     await _instance.transaction((final Transaction txn) async {
-                        for (final ThreadObject object in ret) {
+                        for (final ThreadObject object in ret.threads) {
                             Map<String, Object?> threadData = {};
                             threadData['name'] = object.name;
                             threadData['board_id'] = boards[0]['id'];
@@ -79,7 +80,7 @@ class GetBoard
         else {
             ret = await GetThreadList(url).doRequest();
             await _instance.transaction((final Transaction txn) async {
-                for (final ThreadObject object in ret) {
+                for (final ThreadObject object in ret.threads) {
                     Map<String, Object?> threadData = {};
                     threadData['name'] = object.name;
                     threadData['board_id'] = boards[0]['id'];
@@ -93,6 +94,6 @@ class GetBoard
             });
         }
 
-        return ret;
+        return ret.threads;
     }
 }

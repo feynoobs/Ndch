@@ -44,9 +44,9 @@ class GetBBS
 
                 final List<BoardObject> boardObjects = [];
                 for (final Map<String, Object?> board in boards) {
-                    boardObjects.add(BoardObject(board['board_id'] as int, board['board_url'] as String, board['board_name'] as String));
+                    boardObjects.add(BoardObject(id: board['board_id'] as int, board['board_url'] as String, board['board_name'] as String));
                 }
-                ret.add(BBSObject(bbs['id'] as int, bbs['bbs_name'] as String, boardObjects));
+                ret.add(BBSObject(id: bbs['id'] as int, bbs['bbs_name'] as String, boardObjects));
             }
         }
         // データベースにBBSの情報がない場合
@@ -75,9 +75,9 @@ class GetBBS
                         boardData['created_at'] = now();
                         boardData['uodated_at'] = now();
                         final int idBoard = await txn.insert('t_boards', boardData);
-                        boardObjects.add(BoardObject(idBoard, board.url, board.name));
+                        boardObjects.add(BoardObject(id: idBoard, board.url, board.name));
                     }
-                    ret.add(BBSObject(idBBS, object.bbs, boardObjects));
+                    ret.add(BBSObject(id: idBBS, object.bbs, boardObjects));
                 }
             });
         }
