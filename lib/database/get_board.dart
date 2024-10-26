@@ -35,13 +35,14 @@ class GetBoard
         );
 
 
-        BoardObject ret = BoardObject(id: boards[0]['id'] as int, url, boards[0]['board_name'] as String);
+        List<ThreadObject> rets = [];
         // データベースにBBSの情報がある場合
         if (boards.isNotEmpty) {
             for (final Map<String, Object?> board in boards) {
                 final List<Map<String, Object?>> threads = await _instance.rawQuery(
                     '''
                         SELECT
+                            id,
                             name AS thread_name,
                             res,
                             dat
@@ -55,13 +56,13 @@ class GetBoard
                 ,  [board['id']]);
                 if (threads.isNotEmpty) {
                     for (final Map<String, Object?> thread in threads) {
-                        ret.threads.add(ThreadObject(thread['dat'] as int, thread['res'] as int, thread['thread_name'] as String));
+                        rets.add(ThreadObject(id: thread['id'] as int,thread['dat'] as int, thread['res'] as int, thread['thread_name'] as String));
                     }
                 }
                 else {
-                    ret = await GetThreadList(url).doRequest();
+                    rets = await GetThreadList(url).doRequest();
                     await _instance.transaction((final Transaction txn) async {
-                        for (final ThreadObject object in ret.threads) {
+                        for (final ThreadObject object in rets) {
                             Map<String, Object?> threadData = {};
                             threadData['name'] = object.name;
                             threadData['board_id'] = boards[0]['id'];
@@ -78,9 +79,9 @@ class GetBoard
         }
         // データベースにBBSの情報がない場合
         else {
-            ret = await GetThreadList(url).doRequest();
+            rets = await GetThreadList(url).doRequest();
             await _instance.transaction((final Transaction txn) async {
-                for (final ThreadObject object in ret.threads) {
+                for (final ThreadObject object in rets) {
                     Map<String, Object?> threadData = {};
                     threadData['name'] = object.name;
                     threadData['board_id'] = boards[0]['id'];
@@ -94,6 +95,6 @@ class GetBoard
             });
         }
 
-        return ret.threads;
+        return rets;
     }
 }

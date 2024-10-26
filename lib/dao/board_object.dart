@@ -1,5 +1,3 @@
-import 'thread_object.dart';
-
 class BoardObject
 {
     int id;

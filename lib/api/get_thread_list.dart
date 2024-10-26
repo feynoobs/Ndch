@@ -1,5 +1,3 @@
-import 'package:google_maps_in_flutter/dao/board_object.dart';
-
 import 'api_common.dart';
 import '../dao/thread_object.dart';
 
@@ -7,9 +5,9 @@ class GetThreadList extends ApiCommon
 {
     GetThreadList(super.url);
 
-    Future<BoardObject> doRequest() async
+    Future<List<ThreadObject>> doRequest() async
     {
-        BoardObject? r;
+        List<ThreadObject> rets = [];
 
         final Map<String, String> headerParams = {
             'Accept-Encoding': 'gzip, compress',
@@ -19,13 +17,11 @@ class GetThreadList extends ApiCommon
         if (ret != null) {
             final RegExp exp = RegExp(r'(\d+)?\.dat<>(.+?)\(\d+\)\n');
             final Iterable<RegExpMatch> matches = exp.allMatches(ret);
-            final List<ThreadObject> t = [];
             for (final RegExpMatch m in matches) {
-                t.add(ThreadObject(m[1] as int, m[3] as int, m[2]!));
+                rets.add(ThreadObject(m[1] as int, m[3] as int, m[2]!));
             }
-            r?.threads = t;
         }
 
-        return r!;
+        return rets;
     }
 }
