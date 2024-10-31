@@ -1,6 +1,6 @@
 class ThreadObject
 {
-    final int id;
+    int id;
     final int dat;
     final int res;
     final String name;

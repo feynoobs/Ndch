@@ -1,4 +1,3 @@
-import 'package:google_maps_in_flutter/dao/board_object.dart';
 import 'package:sqflite/sqflite.dart';
 import '../api/get_thread_list.dart';
 import '../dao/thread_object.dart';
@@ -56,22 +55,22 @@ class GetBoard
                 ,  [board['id']]);
                 if (threads.isNotEmpty) {
                     for (final Map<String, Object?> thread in threads) {
-                        rets.add(ThreadObject(id: thread['id'] as int,thread['dat'] as int, thread['res'] as int, thread['thread_name'] as String));
+                        rets.add(ThreadObject(id: thread['id'] as int, thread['dat'] as int, thread['res'] as int, thread['thread_name'] as String));
                     }
                 }
                 else {
                     rets = await GetThreadList(url).doRequest();
                     await _instance.transaction((final Transaction txn) async {
-                        for (final ThreadObject object in rets) {
+                        for (int i = 0; i < rets.length; ++i) {
                             Map<String, Object?> threadData = {};
-                            threadData['name'] = object.name;
+                            threadData['name'] = rets[i].name;
                             threadData['board_id'] = boards[0]['id'];
-                            threadData['dat'] = object.dat;
-                            threadData['res'] = object.res;
+                            threadData['dat'] = rets[i].dat;
+                            threadData['res'] = rets[i].res;
                             threadData['created_at'] = now();
                             threadData['uodated_at'] = now();
 
-                            await txn.insert('t_threads', threadData);
+                            rets[i].id = await txn.insert('t_threads', threadData);
                         }
                     });
                 }
