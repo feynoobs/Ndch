@@ -19,7 +19,7 @@ class _BBSState extends State<BBS>
 
     Future<void> _initialize() async
     {
-        final List<BBSObject> bbses = await GetBBS(await DB.getInstance()).get();
+        final List<BBSObject> bbses = await GetBBS(await DB.getInstance()).get(false);
         setState(() {
             for (final BBSObject bbs in bbses) {
                 List<GestureDetector> item = <GestureDetector>[];

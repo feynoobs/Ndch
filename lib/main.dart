@@ -120,7 +120,7 @@ class _NdchHomeState extends State<NdchHome>
     void _incrementCounter() async {
         final ins = await DB.getInstance();
         setState(() {
-            GetBBS(ins).get();
+            GetBBS(ins).get(false);
             // This call to setState tells the Flutter framework that something has
             // changed in this State, which causes it to rerun the build method below
             // so that the display can reflect the updated values. If we changed
